@@ -51,18 +51,12 @@ def spread_edge_bel(tweet_id, id_dict, G, l_spreaders):
                 inf_edge_user_list = [[i[0], float(TS_dict[i[0]][0])] for i in inf_edge_list]
                 inf_edge_sorted_list = sorted(inf_edge_user_list, key=lambda x: x[1])
                 print(in_edge_sorted_list.index(inf_edge_sorted_list[0]))
-                spreader_bel_rank = [(len(in_edge_sorted_list) - in_edge_sorted_list.index(i)) for i in inf_edge_sorted_list]
-                d['spreader_bel_rank'] = sorted(spreader_bel_rank) # Ranked based on decsending order of bel. scores
-                # summary: x/y - 'x' of top 'y' believing followers are spreaders.
-                d['summary'] = str(len(inf_edge_sorted_list)) + '/' + str((len(in_edge_sorted_list) -
-                                                               in_edge_sorted_list.index(inf_edge_sorted_list[0])))
-                print(len(inf_edge_sorted_list), ' of top ', (len(in_edge_sorted_list) -
-                                                               in_edge_sorted_list.index(inf_edge_sorted_list[0])), 'are spreaders')
+                spreader_bel_rank = [in_edge_sorted_list.index(i) for i in inf_edge_sorted_list]
+                d['spreader_bel_rank'] = sorted(spreader_bel_rank)
             else:
-                d['summary'] = 'No next spreaders'
+                d['spreader_bel_rank'] = 'No next spreaders'
                 print(spreader, 'has not inf spread paths from it')
                 spreader_with_no_paths += 1
-            # f.write('No. of spreader followers for '+ spreader + ': ' + str(len(inf_edge_sorted_user_list)) + '\n')
             d_dump = json.dumps(d)
             f.write(d_dump + '\n')
 
