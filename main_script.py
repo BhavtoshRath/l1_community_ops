@@ -23,15 +23,14 @@ with open(tweet_id + '/' + ids_file) as infile:
         id_set.add(l_spl[0])
         id_set.add(l_spl[1])
 
-# Consider only those spreaders whose network could be extracted.
-l_spreader = []
+# Consider only those spreaders whose network could be extracted. (i.e. excluding 'protected' twitter users)
+l_spreaders = []
 retweet_file = ''.join(['retweets_', tweet_id, '.txt'])
 with open(tweet_id + '/' + retweet_file) as infile:
     for line in infile:
         l_spl = re.split(r'[,]', line.rstrip())
         if l_spl[2] in id_set:
-            l_spreader.append(id_dict[l_spl[2]])
-
+            l_spreaders.append(id_dict[l_spl[2]])
 
 network_file = ''.join(['network_l1_', tweet_id, '.txt'])
 G = nx.DiGraph()
@@ -46,9 +45,9 @@ with open(tweet_id + '/' + network_file) as infile:
 
 
 networkx_TSM.TSM(tweet_id, G)
-generate_retweet_graph.retweetGraph(tweet_id, id_dict)
-louvain_communities.louvain_and_NBC(tweet_id, id_dict, G)
+generate_retweet_graph.retweetGraph(tweet_id, id_dict, l_spreaders)
+louvain_communities.louvain_and_NBC(tweet_id, G, l_spreaders)
 subgraph_stats.B_C_degree_stats(tweet_id, G)
-spreader_role.sp_role(tweet_id, id_dict)
+spreader_role.sp_role(tweet_id, l_spreaders)
 second_level.second_level_gen(tweet_id, id_dict)
-bel_ranks.spread_edge_bel(tweet_id, id_dict, G, l_spreader)
+bel_ranks.spread_edge_bel(tweet_id, id_dict, G, l_spreaders)

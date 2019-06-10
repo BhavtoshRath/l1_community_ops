@@ -11,16 +11,9 @@ import csv
 import sys
 
 
-def louvain_and_NBC(tweet_id, id_dict, G):
+def louvain_and_NBC(tweet_id, G, l_spreaders):
 
-    # Spreader file
-    retweet_file = ''.join(['retweets_', tweet_id, '.txt'])
-    s_spreaders = set()
-    with open(tweet_id + '/' + retweet_file) as infile:
-        for line in infile:
-            l_spl = re.split(r'[,]', line.rstrip())
-            if l_spl[2] in id_dict.keys():
-                s_spreaders.add(id_dict[l_spl[2]])
+    s_spreaders = set(l_spreaders)
 
     print('Running Louvain.....')
     louvain_file = ''.join(['louvain_l1_', tweet_id, '.txt'])

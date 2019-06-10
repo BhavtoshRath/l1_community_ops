@@ -9,7 +9,7 @@ import sys
 from collections import defaultdict
 
 
-def spread_edge_bel(tweet_id, id_dict, G, l_spreader):
+def spread_edge_bel(tweet_id, id_dict, G, l_spreaders):
 
     print('reading TS file...')
     TS_dict = dict()
@@ -19,16 +19,6 @@ def spread_edge_bel(tweet_id, id_dict, G, l_spreader):
             l_spl = re.split(r'[,]', line.rstrip())
             TS_dict[l_spl[0]] = [l_spl[1], l_spl[2]]
 
-    # bel_dict = dict()
-    # for spreader in l_spreader:
-    #     bel_set = set()
-    #     in_edge_scores_list = []
-    #     in_edge_list = list(G.in_edges(spreader))
-    #     for in_edge in in_edge_list:
-    #         t = [in_edge, TS_dict[in_edge[0]], TS_dict[in_edge[1]]]
-    #         bel_set.add(float(TS_dict[in_edge[0]][0])*float(TS_dict[in_edge[1]][1]))
-    #     bel_dict[spreader] = sorted(list(bel_set))
-
     retweet_graph_file = ''.join(['retweet_graph_', tweet_id, '.txt'])
     G_fol = nx.DiGraph()
     with open(tweet_id + '/' + retweet_graph_file) as infile:
@@ -36,7 +26,7 @@ def spread_edge_bel(tweet_id, id_dict, G, l_spreader):
             l_spl = re.split(',', line.rstrip())
             if len(l_spl) == 2:
                 try:
-                    G_fol.add_edge(id_dict[l_spl[0]], id_dict[l_spl[1]], weight=1)
+                    G_fol.add_edge(l_spl[0], l_spl[1], weight=1)
                 except KeyError:
                     continue
 
@@ -45,7 +35,7 @@ def spread_edge_bel(tweet_id, id_dict, G, l_spreader):
     retweet_graph_ranks_file = ''.join(['spreaders_bel_stats_', tweet_id, '.txt'])
     with open(tweet_id + '/' + retweet_graph_ranks_file, 'w') as f:
         writer = csv.writer(f)
-        for spreader in l_spreader:
+        for spreader in l_spreaders:
             d = dict()
             d['spreader'] = spreader
             print('Spreader:', spreader)
@@ -78,20 +68,6 @@ def spread_edge_bel(tweet_id, id_dict, G, l_spreader):
 
     print('No. of spreaders with no paths from them', spreader_with_no_paths)
 
-
-
-
-        # with open(tweet_id + '/' + retweet_graph_file) as infile:
-        #     for line in infile:
-        #         l_spl = re.split(r'[,]', line.rstrip())
-        #         # spread_edge = tuple(l_spl)
-        #         spreader_followers = bel_dict[l_spl[1]]
-        #         rank = spreader_followers.index(float(TS_dict[l_spl[0]][0])*float(TS_dict[l_spl[1]][1]))
-        #         temp = str(rank)+'/'+str(len(spreader_followers))
-        #         print([l_spl[0], l_spl[1], temp])
-        #         l = [l_spl[0], l_spl[1], float(TS_dict[l_spl[0]][0])*float(TS_dict[l_spl[1]][1]), rank/float(len(spreader_followers)), temp]
-        #         # print(l)
-        #         writer.writerow(l)
 
 
 

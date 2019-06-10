@@ -8,6 +8,7 @@ import sys
 
 
 def B_C_degree_stats(tweet_id, G):
+
     i = 0
     cluster = dict()
     louvain_file = ''.join(['louvain_l1_', tweet_id, '.txt'])

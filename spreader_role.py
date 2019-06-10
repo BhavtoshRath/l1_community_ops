@@ -7,18 +7,10 @@ import sys
 from collections import defaultdict
 
 
-def sp_role(tweet_id, id_dict):
-
-    l_spreader = []
-    retweet_file = ''.join(['retweets_', tweet_id, '.txt'])
-    with open(tweet_id + '/' + retweet_file) as infile:
-        for line in infile:
-            l_spl = re.split(r'[,]', line.rstrip())
-            if l_spl[2] in id_dict.keys():
-                l_spreader.append(id_dict[l_spl[2]])
+def sp_role(tweet_id,  l_spreaders):
 
     with open(tweet_id + '/' + 'spreader_role_l1_'+tweet_id+'.txt', 'w') as f:
-        for spreader in l_spreader:
+        for spreader in l_spreaders:
             D = defaultdict(list)
             D['spreader'] = spreader
             com_NBC_file = ''.join(['com_NBC_l1_', tweet_id, '.txt'])
